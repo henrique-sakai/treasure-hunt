@@ -9,7 +9,13 @@ const app = express();
 var server = require('http').createServer(app);
 
 const {getHomePage} = require('./routes/general');
-const {getGmPage, createQuest} = require('./routes/gm');
+const {getGmPage,
+	   getQuestPage,
+	   getNewAdventurePage,
+	   createAdventure,
+	   getNewQuestPage, 
+	   createQuest} = require('./routes/gm');
+
 const {normalizePort} = require('./routes/function');
 
 const port = normalizePort(process.env.PORT || '8080');
@@ -41,6 +47,13 @@ app.use(express.static(__dirname + '/node_modules'));
 
 app.get('/', getHomePage);
 app.get('/gm', getGmPage);
-app.post('/gm', createQuest);
+
+app.get('/gm/quest/:id', getQuestPage);
+
+app.get('/gm/new-adventure', getNewAdventurePage);
+app.post('/gm/new-adventure', createAdventure);
+
+app.get('/gm/new-quest/adventure-:id', getNewQuestPage);
+app.post('/gm/new-quest/adventure-:id', createQuest);
 
 server.listen(port);
