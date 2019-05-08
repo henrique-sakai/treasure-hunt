@@ -110,7 +110,7 @@
         <h2>Criar quest</h2>
         <p></p>
 
-        <form action='' method="post" encType="multipart/form-data">
+        <form action='' method="post">
 
             <div class="form-group">
                 <label for="name">Nome da quest:</label>
@@ -123,17 +123,28 @@
             </div>
             
             <p>Selecione no mapa o local</p>
+
             <div class="form-group">
-                <label for="latitude">Latitude:</label>
-                <input id="latitude" type="number" step="any" class="form-control" name="latitude">
+                <label for="north">Norte:</label>
+                <input id="north" type="number" step="any" class="form-control" name="north" readonly="readonly">
             </div>
 
             <div class="form-group">
-                <label for="longitude">Longitude:</label>
-                <input id="longitude" type="number" step="any" class="form-control" name="longitude">
+                <label for="south">Sul:</label>
+                <input id="south" type="number" step="any" class="form-control" name="south" readonly="readonly">
             </div>
 
-            <button id="saveBtn" type="submit" class="btn btn-primary">Registrar</button>
+            <div class="form-group">
+                <label for="east">Leste:</label>
+                <input id="east" type="number" step="any" class="form-control" name="east" readonly="readonly">
+            </div>
+
+            <div class="form-group">
+                <label for="west">Oeste:</label>
+                <input id="west" type="number" step="any" class="form-control" name="west" readonly="readonly">
+            </div>
+
+            <button id="saveBtn" type="submit" class="btn btn-primary">Salvar</button>
         </form>
         
     </div>
@@ -151,18 +162,23 @@
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+
+
         function initAutocomplete() {
 
-            var rectangle, myMarker;
+            var rectangle, bounds;
+            var north = document.getElementById('north');
+            var south = document.getElementById('south');
+            var east = document.getElementById('east');
+            var west = document.getElementById('west');
 
             var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -33.8688, lng: 151.2195},
+                center: {lat: -23.533773, lng: -46.625290},
                 zoom: 13,
             });
 
-
-
-            // Positionate the map at the user location and puts a merker on it
+            // Positionate the map at the user location and puts a rectangle on it
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var pos = {
@@ -171,11 +187,9 @@
                     };
                     map.setCenter(pos);
 
-                    myMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(pos.lat , pos.lng),
-                        draggable: true
-                    });
-                    myMarker.setMap(map);
+                    createRect(pos.lat, pos.lng, map, north, south, east, west);
+
+                    updateCoord(rectangle, north, south, east, west)
                 }, function() {
                     handleLocationError(true, infoWindow, map.getCenter());
                 });
@@ -187,8 +201,6 @@
                     'Error: Your browser doesn\'t support geolocation.');
                 infoWindow.open(map);
             }
-
-
 
             //search engine
             // Create the search box and link it to the UI element.
@@ -249,24 +261,44 @@
 
                     map.fitBounds(bounds);
                 });
+
+                center = map.getCenter();
+                rectangle.setMap(null);
+
+                createRect(map.getCenter().lat(), map.getCenter().lng(), map, north, south, east, west);
+
+                updateCoord(rectangle, north, south, east, west);
+
             });
 
+            function createRect(lat, lng, map, n, s, e, w) {
+                bounds = {
+                    north: lat + 0.005,
+                    south: lat - 0.005,
+                    east: lng + 0.005,
+                    west: lng - 0.005,
+                };
+                rectangle = new google.maps.Rectangle({
+                    bounds: bounds,
+                    editable: true,
+                    draggable: true
+                });
+                rectangle.addListener('bounds_changed', function() {
+                    updateCoord(rectangle, n, s, e, w)
+                });
+                rectangle.setMap(map);
+            }
 
-
-            //puts a marker on the place where it is double clicked
-            google.maps.event.addListener(map, 'dblclick', function(event) {
-                addMarker(event.latLng, map);
-            });
-
-            // Adds a marker to the map.
-            function addMarker(location, map) {
-                // Add the marker at the clicked location, and add the next-available label
-                // from the array of alphabetical characters.
-                myMarker.setMap(null);
-                myMarker.position = location;
-                myMarker.setMap(map);
-            }   
+            function updateCoord(rectangle, north, south, east, west) {
+                var ne = rectangle.getBounds().getNorthEast();
+                var sw = rectangle.getBounds().getSouthWest();
+                north.value = ne.lat();
+                south.value = sw.lat();
+                east.value = ne.lng();
+                west.value = sw.lng();rectangle.setMap(map);
+            }
         }
+
     </script>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV4PaT-tpXCdeGAW4e0mF_WAUC5GAMmBI&libraries=places&callback=initAutocomplete"></script>
