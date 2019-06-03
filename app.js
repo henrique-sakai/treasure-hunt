@@ -8,7 +8,9 @@ const app = express();
 
 var server = require('http').createServer(app);
 
-const {getHomePage} = require('./routes/general');
+const {getHomePage,
+	   getPlayaQuestPage} = require('./routes/general');
+
 const {getGmPage,
 	   getQuestPage,
 	   getNewAdventurePage,
@@ -21,12 +23,20 @@ const {normalizePort} = require('./routes/function');
 const port = normalizePort(process.env.PORT || '8080');
 
 const db = mysql.createConnection ({
+	host: 'remotemysql.com',
+	user: 'ZdQl95qSpw',
+	password: 'UcIxg0j1Fo',
+	database: 'ZdQl95qSpw',
+	multipleStatements: true
+});
+/*
+const db = mysql.createConnection ({
 	host: 'localhost',
 	user: 'root',
 	password: '',
 	database: 'hunt',
 	multipleStatements: true
-});
+});*/
 
 //conectar com o bd
 db.connect((err) => {
@@ -46,6 +56,9 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/node_modules'));
 
 app.get('/', getHomePage);
+
+app.get('/play/adventure-:advId/quest-:qstId', getPlayaQuestPage);
+
 app.get('/gm', getGmPage);
 
 app.get('/gm/quest/:id', getQuestPage);

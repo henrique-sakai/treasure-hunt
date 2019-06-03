@@ -42,9 +42,11 @@ module.exports = {
 		console.log("Create adventure\n");
 
 		var name = req.body.name;
+		var start = req.body.start;
+		var end = req.body.end;
 
-		let insert_command = "INSERT INTO adventure(name, total_quests) VALUES (?, ?);";
-		db.query(insert_command, [name, 0], (err, insertResult) =>{
+		let insert_command = "INSERT INTO adventure(name, total_quests, start_time, end_time) VALUES (?, ?, ?, ?);";
+		db.query(insert_command, [name, 0, start, end], (err, insertResult) =>{
 			if(err) res.status(500).send(err);
 
 			res.redirect('/gm');
@@ -79,7 +81,7 @@ module.exports = {
 			db.query(update_command, [total, id], (err, updateResult) => {
 				if(err) return res.status(500).send(err);
 
-				let insert_command = "INSERT INTO quest(adventure_id, sequence, name, north, south, east, west, clue_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+				let insert_command = "INSERT INTO quest(adventure_id, sequence, name, north, south, east, west, clue_text, answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '');";
 				values = [id, total, name, north, south, east, west, text];
 				db.query(insert_command, values, (err, insertResult) => {
 					if(err) return res.status(500).send(err);
