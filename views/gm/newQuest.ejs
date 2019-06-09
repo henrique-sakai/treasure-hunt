@@ -14,91 +14,91 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
         <style>
-                /* Always set the map height explicitly to define the size of the div
-                * element that contains the map. */
-                #map {
-                    height: 50%;
-                    width: 80%;
-                    margin: auto;
-                }
-                /* Optional: Makes the sample page fill the window. */
-                html, body {
-                    height: 100%;
-                    margin: 0;
-                    padding: 0;
-                }
-                #description {
-                    font-family: Roboto;
-                    font-size: 15px;
-                    font-weight: 300;
-                }
+            /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+            #map {
+                height: 50%;
+                width: 80%;
+                margin: auto;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #description {
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+            }
 
-                #infowindow-content .title {
-                    font-weight: bold;
-                }
+            #infowindow-content .title {
+                font-weight: bold;
+            }
 
-                #infowindow-content {
-                    display: none;
-                }
+            #infowindow-content {
+                display: none;
+            }
 
-                #map #infowindow-content {
-                    display: inline;
-                }
+            #map #infowindow-content {
+                display: inline;
+            }
 
-                .pac-card {
-                    margin: 10px 10px 0 0;
-                    border-radius: 2px 0 0 2px;
-                    box-sizing: border-box;
-                    -moz-box-sizing: border-box;
-                    outline: none;
-                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-                    background-color: #fff;
-                    font-family: Roboto;
-                }
+            .pac-card {
+                margin: 10px 10px 0 0;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                outline: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                background-color: #fff;
+                font-family: Roboto;
+            }
 
-                #pac-container {
-                    padding-bottom: 12px;
-                    margin-right: 12px;
-                }
+            #pac-container {
+                padding-bottom: 12px;
+                margin-right: 12px;
+            }
 
-                .pac-controls {
-                    display: inline-block;
-                    padding: 5px 11px;
-                }
+            .pac-controls {
+                display: inline-block;
+                padding: 5px 11px;
+            }
 
-                .pac-controls label {
-                    font-family: Roboto;
-                    font-size: 13px;
-                    font-weight: 300;
-                }
+            .pac-controls label {
+                font-family: Roboto;
+                font-size: 13px;
+                font-weight: 300;
+            }
 
-                #pac-input {
-                    background-color: #fff;
-                    font-family: Roboto;
-                    font-size: 15px;
-                    font-weight: 300;
-                    margin-left: 12px;
-                    padding: 0 11px 0 13px;
-                    text-overflow: ellipsis;
-                    width: 400px;
-                }
+            #pac-input {
+                background-color: #fff;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                margin-left: 12px;
+                padding: 0 11px 0 13px;
+                text-overflow: ellipsis;
+                width: 400px;
+            }
 
-                #pac-input:focus {
-                    border-color: #4d90fe;
-                }
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
 
-                #title {
-                    color: #fff;
-                    background-color: #4d90fe;
-                    font-size: 25px;
-                    font-weight: 500;
-                    padding: 6px 12px;
-                }
+            #title {
+                color: #fff;
+                background-color: #4d90fe;
+                font-size: 25px;
+                font-weight: 500;
+                padding: 6px 12px;
+            }
 
-                #target {
-                    width: 345px;
-                }
-            </style>
+            #target {
+                width: 345px;
+            }
+        </style>
 
     </head>
 
@@ -106,9 +106,9 @@
      
      <div style="width:80%; margin:auto">
 
-        <p></p>
+        <br>
         <h2>Criar quest</h2>
-        <p></p>
+        <br>
 
         <form action='' method="post">
 
@@ -122,26 +122,14 @@
                 <textarea type="text" class="form-control" name="clueText" id="clueText" rows="4"></textarea>
             </div>
             
+            <div class="form-group">
+                <label for="answer">Explicação da resposta:</label>
+                <textarea type="text" class="form-control" name="answer" id="answer" rows="4"></textarea>
+            </div>
+
             <p>Selecione no mapa o local</p>
-
             <div class="form-group">
-                <label for="north">Norte:</label>
-                <input id="north" type="number" step="any" class="form-control" name="north" readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label for="south">Sul:</label>
-                <input id="south" type="number" step="any" class="form-control" name="south" readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label for="east">Leste:</label>
-                <input id="east" type="number" step="any" class="form-control" name="east" readonly="readonly">
-            </div>
-
-            <div class="form-group">
-                <label for="west">Oeste:</label>
-                <input id="west" type="number" step="any" class="form-control" name="west" readonly="readonly">
+                <input id="area" type="text" class="form-control" name="area">
             </div>
 
             <button id="saveBtn" type="submit" class="btn btn-primary">Salvar</button>
@@ -149,36 +137,22 @@
         
     </div>
 
-    <p></p>
+    <br>
+
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
 
-
     <script>
-      // This example adds a search box to a map, using the Google Place Autocomplete
-      // feature. People can enter geographical searches. The search box will return a
-      // pick list containing a mix of places and predicted search terms.
+        var map;
+        var area = document.getElementById("area");
 
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-
-
-        function initAutocomplete() {
-
-            var rectangle, bounds;
-            var north = document.getElementById('north');
-            var south = document.getElementById('south');
-            var east = document.getElementById('east');
-            var west = document.getElementById('west');
-
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -23.533773, lng: -46.625290},
-                zoom: 13,
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 13
             });
 
-            // Positionate the map at the user location and puts a rectangle on it
+            // Positionate the map at the user location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var pos = {
@@ -186,23 +160,14 @@
                         lng: position.coords.longitude
                     };
                     map.setCenter(pos);
-
-                    createRect(pos.lat, pos.lng, map, north, south, east, west);
-
-                    updateCoord(rectangle, north, south, east, west)
                 }, function() {
                     handleLocationError(true, infoWindow, map.getCenter());
                 });
             }
-            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPositMaion(pos);
-                infoWindow.setContent(browserHasGeolocation ?
-                    'Error: The Geolocation service failed.' :
-                    'Error: Your browser doesn\'t support geolocation.');
-                infoWindow.open(map);
-            }
 
-            //search engine
+            setPolygonStuff(map);
+
+//search engine--------------
             // Create the search box and link it to the UI element.
             var input = document.getElementById('pac-input');
             var searchBox = new google.maps.places.SearchBox(input);
@@ -263,46 +228,46 @@
                 });
 
                 center = map.getCenter();
-                rectangle.setMap(null);
+            });
+//search engine end-----------------
 
-                createRect(map.getCenter().lat(), map.getCenter().lng(), map, north, south, east, west);
+        }
 
-                updateCoord(rectangle, north, south, east, west);
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPositMaion(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
 
+        function setPolygonStuff(map) {
+            map.data.setControls(['Polygon']);
+
+            map.data.setStyle({
+                editable: true,
+                draggable: true,
+                visible: true
             });
 
-            function createRect(lat, lng, map, n, s, e, w) {
-                bounds = {
-                    north: lat + 0.005,
-                    south: lat - 0.005,
-                    east: lng + 0.005,
-                    west: lng - 0.005,
-                };
-                rectangle = new google.maps.Rectangle({
-                    bounds: bounds,
-                    editable: true,
-                    draggable: true
-                });
-                rectangle.addListener('bounds_changed', function() {
-                    updateCoord(rectangle, n, s, e, w)
-                });
-                rectangle.setMap(map);
-            }
-
-            function updateCoord(rectangle, north, south, east, west) {
-                var ne = rectangle.getBounds().getNorthEast();
-                var sw = rectangle.getBounds().getSouthWest();
-                north.value = ne.lat();
-                south.value = sw.lat();
-                east.value = ne.lng();
-                west.value = sw.lng();rectangle.setMap(map);
-            }
+            // Apply listeners to refresh the GeoJson display on a given data layer.
+            map.data.addListener('addfeature', savePolygon);
+            map.data.addListener('removefeature', savePolygon);
+            map.data.addListener('setgeometry', savePolygon);
         }
+
+        function savePolygon() {
+            map.data.toGeoJson(function (json) {
+                area.value = JSON.stringify(json.features[0].geometry.coordinates[0]);
+            });
+        }
+
+        initMap();
 
     </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV4PaT-tpXCdeGAW4e0mF_WAUC5GAMmBI&libraries=places&callback=initAutocomplete"></script>
-    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV4PaT-tpXCdeGAW4e0mF_WAUC5GAMmBI&libraries=places,drawing,geometry&callback=initMap"></script>
+
     </body>
 
 </html>

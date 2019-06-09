@@ -2,14 +2,19 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
 const mysql = require('mysql');
 
 const app = express();
 
-var server = require('http').createServer(app);
-
-const {getHomePage,
+const {getLoginPage,
+	   loginPlayer,
+	   getHomePage,
+	   getInitialPage,
 	   getPlayaQuestPage} = require('./routes/general');
+
+const {getRegisterPage,
+	registerPlayer} = require('./routes/register');
 
 const {getGmPage,
 	   getQuestPage,
@@ -22,32 +27,17 @@ const {normalizePort} = require('./routes/function');
 
 const port = normalizePort(process.env.PORT || '8080');
 
-const db = mysql.createConnection ({
-	host: 'remotemysql.com',
-	user: 'ZdQl95qSpw',
-	password: 'UcIxg0j1Fo',
-	database: 'ZdQl95qSpw',
-	multipleStatements: true
-});
-/*
-const db = mysql.createConnection ({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: 'hunt',
-	multipleStatements: true
-});*/
-
-//conectar com o bd
-db.connect((err) => {
-	if(err){
-		throw err;
-	}
-	console.log('Connected to database\n');
+//conexão com o mongodb atlas
+mongoose.connect('mongodb+srv://henrique:5vxSkrK3DgyhsBh8@treasure-hunt-v6ctl.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true})
+  	.then(() => {
+    	console.log('Successfully connected to MongoDB Atlas!');
+  	})
+  	.catch((error) => {
+    	console.log('Unable to connect to MongoDB Atlas!');
+    	console.error(error);
 });
 
-global.db = db;//global para uso do banco de dados em outros arquivos
-
+//coonfigurando a aplicação
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.set('port', process.env.port || port);
@@ -55,7 +45,17 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/node_modules'));
 
+//roteamentos
+
 app.get('/', getHomePage);
+
+app.post('/login', loginPlayer);
+app.get('/login', getLoginPage);
+
+app.get('/inicio', getInitialPage);
+
+app.post('/registro', registerPlayer);
+app.get('/registro', getRegisterPage);
 
 app.get('/play/adventure-:advId/quest-:qstId', getPlayaQuestPage);
 
@@ -69,4 +69,14 @@ app.post('/gm/new-adventure', createAdventure);
 app.get('/gm/new-quest/adventure-:id', getNewQuestPage);
 app.post('/gm/new-quest/adventure-:id', createQuest);
 
-server.listen(port);
+app.listen(port);
+
+/*
+npm install -g nodemon
+
+npm install --save-dev nodemon
+
+npm config get prefix
+
+set PATH=%PATH%;C:\Users\sakai\AppData\Roaming\npm;
+*/

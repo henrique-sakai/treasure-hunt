@@ -4,147 +4,228 @@
 
     <head>
         <title>Geolocation</title>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
         <style>
             /* Always set the map height explicitly to define the size of the div
             * element that contains the map. */
             #map {
-                height: 80%;
+                height: 50%;
+                width: 80%;
+                margin: auto;
             }
             /* Optional: Makes the sample page fill the window. */
             html, body {
                 height: 100%;
-                margin: 100;
+                margin: 0;
                 padding: 0;
             }
+            #description {
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+            }
+
+            #infowindow-content .title {
+                font-weight: bold;
+            }
+
+            #infowindow-content {
+                display: none;
+            }
+
+            #map #infowindow-content {
+                display: inline;
+            }
+
+            .pac-card {
+                margin: 10px 10px 0 0;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                outline: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                background-color: #fff;
+                font-family: Roboto;
+            }
+
+            #pac-container {
+                padding-bottom: 12px;
+                margin-right: 12px;
+            }
+
+            .pac-controls {
+                display: inline-block;
+                padding: 5px 11px;
+            }
+
+            .pac-controls label {
+                font-family: Roboto;
+                font-size: 13px;
+                font-weight: 300;
+            }
+
+            #pac-input {
+                background-color: #fff;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                margin-left: 12px;
+                padding: 0 11px 0 13px;
+                text-overflow: ellipsis;
+                width: 400px;
+            }
+
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
+
+            #title {
+                color: #fff;
+                background-color: #4d90fe;
+                font-size: 25px;
+                font-weight: 500;
+                padding: 6px 12px;
+            }
+
+            #target {
+                width: 345px;
+            }
         </style>
+
     </head>
 
-    <body style="width:80%; margin:auto">
+    <body>
      
-        <p></p>
-        <h2 style="text-align: center"><%= quest.name %></h2>
-        <p></p>
-        <p style="text-align: center"><%= quest.clue_text %></p>
+     <div style="width:80%; margin:auto">
 
-        <div id="map"></div>
+        <h3><%= quest.name %></h3>
+        <br>
 
-        <script>
-            // Note: This example requires that you consent to location sharing when
-            // prompted by your browser. If you see the error "The Geolocation service
-            // failed.", it means you probably did not give permission for the browser to
-            // locate you.
-            var map, infoWindow;
-            var id, target, options;
-            
-            function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: -34.397, lng: 150.644},
-                    zoom: 20
-                });
-                infoWindow = new google.maps.InfoWindow;
-            
-                // Try HTML5 geolocation
-                if (navigator.geolocation) {
-                    //gets initial position and sets the center of the map at this position
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        var pos = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
+        <p>Dica: <%= quest.clue %></p>
 
-                        //places a info window on the users location
-                        infoWindow.setPosition(pos);
-                        text = 'Start point:\nLat: ' + pos.lat + '\n Long: ' + pos.lng;
-                        infoWindow.setContent(text);
-                        infoWindow.open(map);
+        <input id="area" type="hidden" class="form-control" name="area" value="<%= quest.area %> ">
+        
 
-                        /*var myMarker = new google.maps.Marker({
-                            position: new google.maps.LatLng(pos.lat , pos.lng),
-                            draggable: true
-                        });*/
-                        //infoWindow.open(marker)
+    </div>
 
-                        map.setCenter(pos);
-                        //myMarker.setMap(map);
-                    }, function() {
-                        handleLocationError(true, infoWindow, map.getCenter());
-                    });
-                    //keeps getting users location
-                    navigator.geolocation.watchPosition(success, error, options);
-                } else {
-                    // Browser doesn't support Geolocation
-                    handleLocationError(false, infoWindow, map.getCenter());
-                }
-            }
+    <div id="map"></div>
 
-            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPositMaion(pos);
-                infoWindow.setContent(browserHasGeolocation ?
-                    'Error: The Geolocation service failed.' :
-                    'Error: Your browser doesn\'t support geolocation.');
-                infoWindow.open(map);
-            }
-            function success(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
+    <script>
 
-                let north = <%= quest.north %>;
-                let south = <%= quest.south %>;
-                let east = <%= quest.east %>;
-                let west = <%= quest.west %>;
+        var areaField = document.getElementById("area");
+        var map, goal;
+        var goalCoords = [];
 
-                if(pos.lng>west && pos.lng<east && pos.lat>south && pos.lat <north){
+        var options = {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function initMap() {
+            //cria um novo mapa
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 13,
+            });
+
+            infoWindow = new google.maps.InfoWindow;
+
+            //posiciona o mapa na localização do usuario
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    //janelinha na posicao do usuario
                     infoWindow.setPosition(pos);
-                    text = 'Sucesso';
-                    infoWindow.setContent(text);
                     infoWindow.open(map);
-                }
-                else{
-                    infoWindow.setPosition(pos);
-                    text = 'Lat: ' + pos.lat + '\n Long: ' + pos.lng;
-                    infoWindow.setContent(text);
-                    infoWindow.open(map);
-                }
+                    
+                    //centra o mapa no local do usuario
+                    map.setCenter(pos);
 
-                var myMarker = new google.maps.Marker({
-                    position: new google.maps.LatLng(pos.lat , pos.lng),
-                    draggable: true
+                    //insere o poligono no mapa
+                    insertPolygon(map);
+
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
                 });
-                //infoWindow.open(marker)
 
-                map.setCenter(pos);
-                myMarker.setMap(map);
-                /*var crd = pos.coords;
+                navigator.geolocation.watchPosition(success, error, options);
 
-                if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
-                    console.log('Congratulations, you reached the target');
-                    navigator.geolocation.clearWatch(id);
-                }*/
+            }
+            else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPositMaion(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+
+        function insertPolygon(map) {
+            map.data.setStyle({
+                editable: false,
+                draggable: false,
+                visible: false
+            });
+            
+            var temp = <%= quest.area %>;
+
+            for(var i = 0; i < temp.length; i++) {
+                goalCoords[i] = {
+                    lat: temp[i][1],
+                    lng: temp[i][0]
+                }
             }
 
-            function error(err) {
-                console.warn('ERROR(' + err.code + '): ' + err.message);
-            }
+            goal = new google.maps.Polygon({
+                paths: goalCoords,
+                strokeOpacity: 0,
+                fillOpacity: 0,
+            });
 
-            target = {
-                latitude : 0,
-                longitude: 0
+            goal.setMap(map);
+        }
+
+        function success(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
             };
+            var curPosition = new google.maps.LatLng(pos.lat, pos.lng);
 
-            options = {
-                enableHighAccuracy: false,
-                timeout: 5000,
-                maximumAge: 0
-            };
+            infoWindow.setPosition(pos);
+            infoWindow.open(map);
 
-        </script>
+            var text = google.maps.geometry.poly.containsLocation(curPosition, goal) ? 'inside' : 'outside';
+            infoWindow.setContent(text);
+        }
 
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV4PaT-tpXCdeGAW4e0mF_WAUC5GAMmBI&callback=initMap"></script>
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+        }
+
+        initMap();
+
+    </script>
+    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV4PaT-tpXCdeGAW4e0mF_WAUC5GAMmBI&libraries=places,drawing,geometry&callback=initMap"></script>
 
     </body>
 

@@ -23,20 +23,16 @@
         <h2>Adventures</h2>
         <p></p>
 
-        <a href="/gm/new-adventure" class="btn btn-info" role="button">Criar nova aventura</a>
-        <p></p>
-
         <div id="accordion">
 
             <% if (adventures.length > 0) {%>
-                <% adventures.forEach((adv, i) => { %>
+                <% adventures.forEach((adventure, i) => { %>
 
-            <div class="card" id="<%= adv._id %>">
+            <div class="card" id="<%= adventure._id %>">
                 <div class="card-header">
-                    <a class="card-link" data-toggle="collapse" href="#collapse<%= adv._id %>">
-                        <%= adv.name %>
+                    <a class="card-link" data-toggle="collapse" href="#collapse<%= adventure._id %>">
+                        <%= adventure.name %>
                     </a>
-                    <a href="/gm/new-quest/adventure-<%= adv._id %>" class="btn btn-info" role="button">Criar nova quest</a>
                 </div>
 
             </div>
@@ -56,7 +52,7 @@
         var element = 
             '<div id="collapse<%= quest.adventure_id %>" class="collapse show" data-parent="#accordion">\
                 <div class="card-body">\
-                    <a href="/gm/quest/<%= quest._id %>">Quest <%= quest.name %></a>\
+                    <a href="/play/adventure-<%= quest.adventure_id %>/quest-<%= quest._id %>">Quest: <%= quest.name %></a>\
                 </div>\
             </div>';
 
