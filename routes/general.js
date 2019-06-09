@@ -6,21 +6,7 @@ module.exports = {
 	getHomePage: (req, res) => {
 		console.log("Home Page\n");
 
-		let select_command = "SELECT * FROM adventure ORDER BY adventure_id DESC;";
-		res.send("OK");
-		/*db.query(select_command, (err, adventures) => {
-			if(err) return res.status(500).send(err);
-
-			let select_command = "SELECT quest_id, adventure_id, sequence, name FROM quest ORDER BY sequence;";
-			db.query(select_command, (err, quests) => {
-				if(err) return res.status(500).send(err);
-
-				res.render('player/homePage.ejs', {
-					adventures,
-					quests
-				});
-			});
-		});*/
+		res.render('player/login.ejs');
 	},
 	getInitialPage: (req, res) => {
 		console.log('Players initial page');
@@ -53,8 +39,6 @@ module.exports = {
 					res.status(400).json({error: error});
 				}
 			);
-
-		//res.status(200).render('player/initial.ejs');
 	},
 	getLoginPage: (req, res) => {
 		console.log('Login page');
